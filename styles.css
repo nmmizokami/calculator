@@ -1,0 +1,31 @@
+* {
+    box-sizing: border-box;
+}
+
+.calculator-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.display {
+    height: 10%;
+    width: 20%;
+
+    /* TODO — delete border later */
+    border: 1px solid black;
+}
+
+.clear-and-backspace {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 20%;
+}
+
+.functions-and-numbers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 20%;
+}

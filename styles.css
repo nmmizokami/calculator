@@ -24,7 +24,7 @@
     width: 20%;
 }
 
-.functions-and-numbers {
+.operators-and-numbers {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     width: 20%;

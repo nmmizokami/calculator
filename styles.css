@@ -12,7 +12,7 @@
 
 .display {
     height: 10%;
-    width: 20%;
+    width: 10%;
 
     /* TODO — delete border later */
     border: 1px solid black;
@@ -21,11 +21,11 @@
 .clear-and-backspace {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    width: 20%;
+    width: 10%;
 }
 
 .operators-and-numbers {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    width: 20%;
+    width: 10%;
 }

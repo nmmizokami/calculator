@@ -1,17 +1,32 @@
-const numberOfInputs = 19;
-let answer = 0;
+const numberOfInputButtons = 19;
+let answer;
 
 const topLineDisplay = document.querySelector('.display_top-line');
 const bottomLineDisplay = document.querySelector('.display_bottom-line');
 const allClearButton = document.querySelector('.all-clear-button');
 const backspaceButton = document.querySelector('.backspace-button');
+const equalsButton = document.querySelector('.equals-button');
 const operatorAndNumberButtonsArray = document.querySelectorAll
         ('.operators-and-numbers_button');
 
-/* Iterates through buttons nodelist to ...*/
-//todo replace() ^ with ** using regex
-for (let i = 0; i < numberOfInputs; ++i) {
+/* Iterates through buttons nodelist to add functionality to input buttons */
+for (let i = 0; i < numberOfInputButtons; ++i) {
     operatorAndNumberButtonsArray[i].addEventListener('click', () => {
+        // Clear display if a calculation has just been made and another number input
+        if (/[0-9\.]/.test(operatorAndNumberButtonsArray[i].textContent) === true &&
+                bottomLineDisplay.textContent != "") {
+            topLineDisplay.textContent = "";
+            bottomLineDisplay.textContent = "";
+        }
+
+        // Clear topline and move bottom line up if calc has just been made and another 
+        // operator input
+        if (bottomLineDisplay.textContent != "" &&
+                /[×÷+\-/*()^]/.test(operatorAndNumberButtonsArray[i].textContent) === true) {
+            topLineDisplay.textContent = bottomLineDisplay.textContent;
+            bottomLineDisplay.textContent = "";
+        }
+
         topLineDisplay.textContent += operatorAndNumberButtonsArray[i].textContent;
     })
 }
@@ -19,12 +34,24 @@ for (let i = 0; i < numberOfInputs; ++i) {
 /* Clears entire display */
 allClearButton.addEventListener('click', () => {
     topLineDisplay.textContent = "";
+    bottomLineDisplay.textContent = "";
 });
 
 /* Deletes last input from display */
 backspaceButton.addEventListener('click', () => {
-    topLineDisplay.textContent = topLineDisplay.textContent.slice
-            (0, topLineDisplay.textContent.length - 1);
+    if (bottomLineDisplay.textContent.length != 0) {
+        topLineDisplay.textContent = "";
+        bottomLineDisplay.textContent = "";
+    }
+    else {
+        topLineDisplay.textContent = topLineDisplay.textContent.slice
+                (0, topLineDisplay.textContent.length - 1);
+    }
+});
+
+/* Evaluates the function when '=' is pressed */
+equalsButton.addEventListener('click', () => {
+    bottomLineDisplay.textContent = evaluate(topLineDisplay.textContent);
 });
 
 /* 
@@ -61,6 +88,19 @@ function tokenize(input) {
         // Check for mathematical operators and push to tokens array
         if (/[+\-/*()^]/.test(char)) {
             tokens.push(char);
+            scanner++;
+            continue;
+        }
+
+        // Check for '&plus;', '&divide;', '&times;', '&minus;'      
+        if (char === '×') {
+            tokens.push('*');
+            scanner++;
+            continue;
+        }
+
+        if (char === '÷') {
+            tokens.push('/');
             scanner++;
             continue;
         }
@@ -133,7 +173,7 @@ function shouldUnwindOperatorStack(operators, nextToken) {
 
 /* Function that takes as input an expression in RPN format and evaluates
    from left to right */
-function evaluate(rpn) {
+function evalRPN(rpn) {
     const stack = [];
 
     for (let scanner = 0; scanner < rpn.length; scanner++) {
@@ -172,3 +212,6 @@ function operate(operator, stack) {
     }
 }
 
+function evaluate(input) {
+    return evalRPN(toRPN(tokenize(input)));
+}
